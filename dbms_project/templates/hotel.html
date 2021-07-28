@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block style %}
+body {font-family: Arial, Helvetica, sans-serif;}
+
+.checked {
+  color: orange;
+}
+
+{% endblock %}
+
+{% block main %}
+
+<div class="d-flex flex-column justify-content-center align-items-center mx-auto">
+
+{% for hotel in hotels %}
+<div class="card mb-3 mt-5" style="max-width: 540px;">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img src="{{ url_for('static',filename=(hotel.photo if hotel.photo else 'Home.jpg')) }}" class="card-img">
+    </div>
+    <div class="col-md-8 d-flex flex-column">
+      <a href="{{url_for('.room', hotel_id=hotel.hotel_id)}}" class="card-body btn">
+        <h5 class="card-title">{{ hotel.hotel_name }}</h5>
+        <p class="card-text">{{ hotel.locations }}</p>
+        <p class="card-text">
+          {% for _ in range(hotel.avgstar|int) %}
+          <span class="fa fa-star checked"></span>
+          {% endfor %}
+          {% for _ in range(5 - hotel.avgstar|int) %}
+          <span class="fa fa-star"></span>
+          {% endfor %}
+        </p>
+      </a>
+      <a href="{{url_for('.review', hotel_id=hotel.hotel_id)}}" class="btn btn-primary">View Reviews<i class="fa fa-angle-double-right m-1" aria-hidden="true"></i></a>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

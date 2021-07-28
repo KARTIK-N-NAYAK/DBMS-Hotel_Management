@@ -1,1 +1,2 @@
-# DBMS-Hotel_Management
+# DBMS-hotel_management
+Hotel management- Room allotment

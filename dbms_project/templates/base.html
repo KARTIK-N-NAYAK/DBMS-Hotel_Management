@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>Hotel management- Room allotment</title>
+  <style>
+    /*include styles for header and footer here*/
+    {% block style %}
+    {% endblock %}
+  </style>
+</head>
+<body>
+  <header class="d-flex justify-content-between bg-danger text-black mb-3">
+    {% if back %}
+    <a href="{{back}}" class="btn btn-sm btn-dark">Back</a>
+    {% endif %}
+    <h2 class="align-middle text-light display-4">Hotel Room Booking</h2>
+    <a href="{{ url_for('.logout') }}" class="btn btn-dark btn-lg">
+      <span class="glyphicon glyphicon-log-out"></span> Log out
+    </a>
+</header>
+  <div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'message' %}
+              <div class="alert alert-warning alert-dismissible" role="alert">
+            {% else %}
+              <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+            {% endif %}
+            <span class="btn close" data-dismiss="alert">&times;</span>
+              {{ message }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
+  </div>
+  <main>
+    {% block main %}
+    {% endblock %}
+  </main>
+  <footer>
+  </footer>
+  {% block script%}
+  {% endblock %}
+</body>
+</html>

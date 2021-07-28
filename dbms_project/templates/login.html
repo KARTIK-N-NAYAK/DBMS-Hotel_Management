@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body {font-family: Arial, Helvetica, sans-serif;}
+
+  /* Full-width input fields */
+    input[type=text], input[type=password], input[type=email], input[type=tel]{
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+  /* Set a style for all buttons */
+  button {
+    background-color: black;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  button:hover {
+    opacity: 0.8;
+  }
+
+  /* Extra styles for the cancel button */
+  .cancelbtn {
+    width: auto;
+    padding: 10px 18px;
+    background-color: #f44336;
+  }
+
+  /* Center the image and position the close button */
+  .imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+    position: relative;
+  }
+
+  img.avatar {
+    width: 20%;
+    border-radius: 50%;
+  }
+
+  .container {
+    padding: 16px;
+  }
+
+  span.psw {
+    float: right;
+    padding-top: 16px;
+  }
+
+  /* The Modal (background) */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 60px;
+  }
+
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+  }
+
+  /* The Close Button (x) */
+  .close1 {
+    position: absolute;
+    right: 25px;
+    top: 0;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+  }
+
+  .close1:hover,
+  .close1:focus {
+    color: red;
+    cursor: pointer;
+  }
+
+  /* Add Zoom Animation */
+  .animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+  }
+
+  @-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)}
+    to {-webkit-transform: scale(1)}
+  }
+
+  @keyframes animatezoom {
+    from {transform: scale(0)}
+    to {transform: scale(1)}
+  }
+
+  /* Change styles for span and cancel button on extra small screens */
+  @media screen and (max-width: 300px) {
+    span.psw {
+       display: block;
+       float: none;
+    }
+    .cancelbtn {
+       width: 100%;
+    }
+  }
+
+  #img-div{
+    background-color: white;
+    padding: 20px 20px 10px 20px;
+    border-radius: 10px;
+  }
+
+  #image{
+    display: block;
+    width: 80%;
+    height: auto;
+    margin: auto;
+    border-radius: 10px;
+  }
+  .error{
+    border: solid red;
+  background-color: cyan;
+  color:black;
+  }
+  </style>
+
+</head>
+
+<header class="d-flex justify-content-between bg-danger text-black mb-3">
+<h2 class="align-middle text-light display-4">Hotel Room Booking</h2>
+<div class="d-flex justify-content-end">
+<div>
+<button onclick="document.getElementById('id01').style.display='block'" >Login</button>
+</div>
+
+<div>
+<button onclick="document.getElementById('id02').style.display='block'">Sign Up</button>
+</div>
+
+</div>
+</header>
+
+
+<div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+          {% if category == 'message' %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+          {% else %}
+            <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+          {% endif %}
+          <span class="btn close" data-dismiss="alert">&times;</span>
+            {{ message }}
+          </div>
+      {% endfor %}
+    {% endif %}
+{% endwith %}
+
+</div>
+<div id="id01" class="modal">
+
+  <form class="modal-content animate" action="{{ url_for('.home') }}" method="post">
+    {{signinform.hidden_tag()}}
+    <div class="imgcontainer">
+      <span onclick="document.getElementById('id01').style.display='none'" class="close1" title="Close Modal">&times;</span>
+      <img src="{{ url_for('static',filename='image.jpg') }}" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="container">
+      <label for="userid"><b>Customer ID</b></label>
+      {{ signinform.userid(placeholder="Enter Customer ID") }}
+        {% for error in signinform.errors['userid'] %}
+        <div class="error">
+          {{error}}<span class="closebtn error-cb">&times;</span>
+        </div>
+          {% endfor%}
+      <!--<input type="text" placeholder="Enter Customer ID" name="cid" required>-->
+
+      <label for="password"><b>Password</b></label>
+      {{ signinform.password(placeholder="Enter Password") }}
+        {% for error in signinform.errors['password'] %}
+        <div class="error">
+          {{error}}<span class="closebtn error-cb">&times;</span>
+        </div>
+          {% endfor%}
+      <!--<input type="password" placeholder="Enter Password" name="psw" required>-->
+      <button type="submit" id="signin" name="signin">Login</button>
+      <!--<label>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+      </label>-->
+    </div>
+
+    <div class="container" style="background-color:#f1f1f1">
+      <div style="display: flex; flex-direction: row;justify-content: space-between;">
+      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+      <span class="psw">New User?<a href=# onclick="document.getElementById('id01').style.display='none';document.getElementById('id02').style.display='block';" style="width:auto; ">Sign Up</a> here</span>
+      <!--<span class="psw">Forgot <a href="forgot_password.html">password?</a></span>-->
+      </div>
+    </div>
+  </form>
+</div>
+
+
+
+<div id="id02" class="modal">
+
+  <form class="modal-content animate" action="{{ url_for('.home') }}" method="post">
+    {{registerform.hidden_tag()}}
+    <div class="imgcontainer">
+      <span onclick="document.getElementById('id02').style.display='none'" class="close1" title="Close Modal">&times;</span>
+      <img src="{{ url_for('static',filename='image.jpg') }}" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="container">
+      <label for="name"><b>Name</b></label>
+      {{ registerform.name(placeholder="Enter Name") }}
+      <!--<input type="text" placeholder="Enter Name" name="cname" required>-->
+
+	  <label for="phone"><b>Phone Number</b></label>
+    {{ registerform.phone(type="tel", placeholder="Enter Phone Number") }}
+      <!--<input type="tel" placeholder="Enter Phone Number" name="phone">-->
+
+      <label for="email"><b>Email</b></label>
+      {{ registerform.email(placeholder="Enter Email") }}
+      <!--<input type="email" placeholder="Enter Email" name="email">-->
+
+      <label for="aadhar"><b>Aadhar No</b></label>
+      {{ registerform.aadhar(placeholder="Enter Aadhar number") }}
+      <!--<input type="text" placeholder="Enter Aadhar number" name="aadhar" required>-->
+
+      <label for="userid"><b>Customer ID</b></label>
+      {{ registerform.userid(placeholder="Enter Customer ID") }}
+      <!--<input type="text" placeholder="Enter Customer ID" name="userid" required>-->
+
+      <label for="password"><b>Password</b></label>
+      {{ registerform.password(placeholder="Enter Password") }}
+      <!--<input type="password" placeholder="Enter Password" name="psw" required>-->
+
+      <label for="repassword"><b>Confirm Password</b></label>
+      {{ registerform.repassword(placeholder="Enter Password Again") }}
+      <!--<input type="password" placeholder="Enter Password Again" name="cpsw" required>-->
+      <label>
+        <input type="checkbox" checked="checked" name="agree" required>By creating an account you agree to our <a href="{{url_for('.terms')}}" target="_blank" style="color:dodgerblue">Terms & Privacy</a>.
+      </label>
+      <button type="submit" id="register" name="register">Sign Up</button>
+
+
+    </div>
+    <div class="container" style="background-color:#f1f1f1">
+      <button type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbtn">Cancel</button>
+      <span class="psw">Already have account?<a href=# onclick="document.getElementById('id02').style.display='none';document.getElementById('id01').style.display='block';" style="width:auto; ">Sign In</a> here</span>
+    </div>
+  </form>
+</div>
+<script>
+// Get the modal
+var modal1 = document.getElementById('id01');
+var modal2 = document.getElementById('id02');
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal1 || event.target == modal2) {
+        modal1.style.display = "none";
+        modal2.style.display = "none";
+    }
+}
+</script>
+<body>
+<figure id="img-div" class="text-center">
+    <img src="{{ url_for('static',filename='Home.jpg') }}">
+</figure>
+</body>
+</html>

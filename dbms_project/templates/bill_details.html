@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block style %}
+body {font-family: Arial, Helvetica, sans-serif;}
+{% endblock %}
+
+{% block main %}
+<h1>
+  {% if upcoming %}
+  UPCOMING
+  {% elif cancelled %}
+  CANCELLED BOOKINGS
+  {% else %}
+  BOOKING HISTORY
+  {% endif %}
+</h1>
+<div class="d-flex flex-wrap align-content-around m-5">
+
+{% for bill in card %}
+  <div class="card border-dark mx-auto my-2" style="width:400px">
+    <div class="card-body">
+      <h4 class="card-title" id="title">Bill Details</h4>
+      <p id="bid" class="card-text small">Bill-id: {{bill}}</p>
+      <p id="date" class="card-text small">Date: {{card[bill][0]['date']}}</p>
+      <p id="mode" class="card-text small">Mode: {{card[bill][0]['mode']}}</p>
+      <br>
+      {% for room in card[bill][1:] %}
+      <p id="hotel" class="card-text small">{{room['hotel_name']}}, {{room['locations']}}</p>
+      <p id="rno" class="card-text small">Room {{room['room_no']}}</p>
+      <p id="cin" class="card-text small">Check-in: {{room['check_in']}}</p>
+      <p id="cout" class="card-text small">Check-out:{{room['check_out']}}</p>
+      <br>
+      {% endfor %}
+       <div id="amt" class="card-text">Total amount: {{card[bill][0]['amount']}}
+         {% if upcoming %}
+         <form action="{{url_for('.upcoming')}}" method="post">
+           <input type="hidden" name="bill_id" id="bill_id" value="{{bill}}">
+           <button type="submit" class="btn btn-sm btn-danger" name="cancel">CANCEL</button>
+         </form>
+         {% endif %}
+       </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
+{% endblock %}
+
+{% block script %}
+{% endblock %}

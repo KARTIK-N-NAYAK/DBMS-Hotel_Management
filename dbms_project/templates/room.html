@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block style %}
+body {font-family: Arial, Helvetica, sans-serif;}
+.set-width{
+width:50%;
+}
+div.scroll {
+                margin:4px, 4px;
+                padding:4px;
+                width: 300px;
+                height: 600px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                text-align:justify;
+            }
+
+@media only screen and (max-width: 768px) {
+  div.scroll {
+                width: 200px;
+                height: 300px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                text-align:justify;
+            }
+}
+{% endblock %}
+
+{% block main %}
+
+  <form id="filter" action="{{url_for('.room', hotel_id=hotel_id)}}" method="post">
+  <div class="row">
+      {{filterform.hidden_tag()}}
+    <div class="col-md-2">
+      <div class="container">
+          <select id="type" name="type" required="" class="custom-select">
+            <option value="{{filter.type}}" selected>Choose a type</option>
+            {% for type in types %}
+            <option value="{{type.type_id}}" class="dropdown-item">{{type.no_beds}} beds, {{'Wifi' if type.wifi}} {{'TV' if type.tv}} {{'AC' if type.ac}}</option>
+            {% endfor %}
+          </select>
+          {% for error in filterform.errors['beds'] %}
+          <div class="error">
+            {{error}}<span class="closebtn error-cb">&times;</span>
+          </div>
+            {% endfor%}
+      </div>
+    </div>
+    <div class="col-md-2 form-check-inline form-group ">
+      <input class="form-control" id="price" name="price" placeholder="PRICE" required="" type="number" step=".01" value="{{filter.price}}">
+      {% for error in filterform.errors['price'] %}
+      <div class="error">
+        {{error}}<span class="closebtn error-cb">&times;</span>
+      </div>
+        {% endfor%}
+    </div>
+    </div>
+    <div class="row mx-3">
+    <div class="col-md-3 form-check-inline">
+      <label for="CHECK IN">CHECK IN :</label>
+      <input id="checkin" name="checkin" required="" type="date" value="{{filter.checkin}}">
+      {% for error in filterform.errors['checkin'] %}
+      <div class="error">
+        {{error}}<span class="closebtn error-cb">&times;</span>
+      </div>
+        {% endfor%}
+    </div>
+    <div class="col-md-3 form-check-inline">
+      <label for="CHECK OUT">CHECK OUT:</label>
+      <input id="checkout" name="checkout" required="" type="date" value="{{filter.checkout}}">
+      {% for error in filterform.errors['checkout'] %}
+      <div class="error">
+        {{error}}<span class="closebtn error-cb">&times;</span>
+      </div>
+        {% endfor%}
+    </div>
+    <div class="col-md-3">
+    <button type="submit" name="filter" id="filter" class="btn btn-primary col-md-2">Filter</button>
+    </div>
+  </div>
+</form>
+
+<div class="d-flex ">
+
+<div class="p-2 flex-grow-1 bd-highlight">
+<div class="container">
+  <div class="row">
+    {% for room in rooms %}
+    <div class="col-md-4 my-2">
+      <div class="card bg-light">
+        <div class="card-body">
+          <p class="card-text">ROOM NO.: {{room.room_no}}</p>
+        <p class="card-text">PRICE: &#8377;{{room.price}}</p>
+        <p class="card-text">NO. OF BEDS: {{room.no_beds}}</p>
+        <p class="card-text">WIFI{{'✓' if room.wifi else '✕'}}, TV{{'✓' if room.tv else '✕'}}, AC{{'✓' if room.ac else '✕'}}</p>
+        <form action="{{url_for('.room', hotel_id=hotel_id)}}" method="post">
+          <input type="hidden" name="room_id" value="{{room.room_id}}">
+          <input type="hidden" name="room_no" value="{{room.room_no}}">
+          <input type="hidden" name="price_amt" value="{{room.price}}">
+          <input type="hidden" name="check_in" value="{{filter.checkin}}">
+          <input type="hidden" name="check_out" value="{{filter.checkout}}">
+          <input type="hidden" name="beds" value="{{room.no_beds}}">
+          <input type="hidden" name="wifi" value="{{room.wifi}}">
+          <input type="hidden" name="tv" value="{{room.tv}}">
+          <input type="hidden" name="ac" value="{{room.ac}}">
+	         <button type="submit" class="btn btn-secondary" name="choose">Choose Room</button>
+        </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+</div>
+
+<div class="p-2 ">
+<div class="scroll">
+<div class="d-flex flex-column align-content-around m-1">
+
+{% for item in cart %}
+<div class="card bg-light m-1 " style="max-width: 300px;">
+  <div class="card-body">
+    <p class="card-text">HOTEL NAME: {{item['hotel_name']}}</p>
+	<p class="card-text">ROOM NUMBER: {{item['room_no']}}</p>
+	<p class="card-text">PRICE: {{item['price']}}</p>
+  <form action="{{url_for('.room',hotel_id=hotel_id)}}" method="post">
+    <input type="hidden" name="room_id" value="{{item['room_id']}}">
+	<button type="submit" class="btn btn-danger" name="delete">DELETE</button>
+  </form>
+  </div>
+</div>
+{% endfor %}
+
+<form action="{{url_for('.ConfirmBooking')}}" method="post">
+  <select name="mode" id="mode" required="" class="custom-select">
+    <option disabled>Select mode of payment</option>
+    <option value="UPI">UPI</option>
+    <option value="DEBIT">DEBIT</option>
+    <option value="CREDIT">CREDIT</option>
+    <option value="NET BANKING">NET BANKING</option>
+  </select>
+<button type="submit" class="btn btn-dark">CONFIRM BOOKING</button>
+</form>
+</div>
+</div>
+
+
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

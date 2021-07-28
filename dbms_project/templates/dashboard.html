@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block style %}
+body {font-family: Arial, Helvetica, sans-serif;}
+{% endblock %}
+
+{% block main %}
+<a href="{{url_for('.profile')}}" class="float-sm-right mr-4"><i class="fa fa-user"></i> {{ session['c_id'] }}</a>
+<form action="{{url_for('.dashboard')}}" method="post">
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+
+    <div class="input-group mb-3 input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text justify-content-center">Location</span>
+      </div>
+      <select name="location" class="custom-select w-50">
+        {% for location in locations %}
+        <option>{{ location[0] }}</option>
+        {% endfor %}
+  </select>
+      <div class="input-group-append">
+    <button class="btn btn-success" type="submit" name="search">Search</button>
+  </div>
+    </div>
+
+</div>
+
+ </div>
+
+ </form>
+
+
+
+
+
+<div class="d-flex justify-content-around mx-auto w-80 mt-5">
+<div class="container mt-5">
+
+  <div class="card mx-auto mt-5" style="width:250px;" >
+    <img class="card-img-top mx-auto w-80" src="{{ url_for('static',filename='calendar.png') }}">
+    <div class="card-body">
+      <p class="card-title text-center">Upcoming</p>
+      <a href="{{url_for('.upcoming')}}" class="stretched-link"></a>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+
+  <div class="card mx-auto mt-5" style="width:250px;">
+    <img class="card-img-top mx-auto w-80" src="{{ url_for('static',filename='booking.png') }}">
+    <div class="card-body">
+      <p class="card-title text-center" >Booking History</p>
+      <a href="{{url_for('.history')}}" class="stretched-link"></a>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+
+  <div class="card mx-auto mt-5" style="width:250px;">
+    <img class="card-img-top mx-auto w-80" src="{{ url_for('static',filename='cancel.png') }}">
+    <div class="card-body">
+      <p class="card-title text-center" >Cancelled Booking</p>
+      <a href="{{url_for('.cancelled')}}" class="stretched-link"></a>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}
